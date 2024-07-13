@@ -33,8 +33,8 @@ You need to setup the testing subsets of ScanNet and MegaDepth first. We create 
 
 ```shell
 # set up symlinks
-ln -s /path/to/scannet-1500-testset/* /path/to/EfficientLoFTR/data/scannet/test
-ln -s /path/to/megadepth-1500-testset/* /path/to/EfficientLoFTR/data/megadepth/test
+ln -s /Users/asher/develop/data/dl/eloftr/testdata/scannet_test_1500/scene0721_00/* data/scannet/test
+ln -s /Users/asher/develop/data/dl/eloftr/testdata/megadepth_test_1500/Undistorted_SfM/* data/megadepth/test
 ```
 ### Inference time
 ```shell
