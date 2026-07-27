@@ -12,8 +12,8 @@ https://github.com/zju3dv/EfficientLoFTR/assets/69951260/40890d21-180e-4e70-aeba
 ## 🌟News🌟
 <b>[2025-02]</b> To enhance multi-modality matching with EfficientLoFTR and improve its applicability to UAV localization, autonomous driving, and beyond, check out our latest work, [MatchAnything](https://github.com/zju3dv/MatchAnything)! Try our demo and see it in action!
 
-<b>[2025-07]</b> EfficientLoFTR is now part of 🤗 [Hugging Face Transformers](https://github.com/huggingface/transformers) (credit to [sbucaille](https://github.com/sbucaille)!).
-You can run inference with a few lines of code using `pip install transformers`. [[model card](https://huggingface.co/zju-community/efficientloftr)]
+<b>[2026-07]</b> GGML RepVGG backbone ships **F32 / F16 / Q8_0** GGUF variants with CPU/CUDA/Vulkan verify. See **[cpp/BENCHMARK.md](cpp/BENCHMARK.md)** and `assets/ggml_validation_20260727/`.
+
 ## TODO List
 - [x] Inference code and pretrained models
 - [x] Code for reproducing the test-set results
@@ -31,6 +31,37 @@ pip install -r requirements.txt
 The test and training can be downloaded by [download link](https://drive.google.com/drive/folders/1DOcOPZb3-5cWxLqn256AhwUVjBPifhuf?usp=sharing) provided by LoFTR
 
 We provide our pretrained model in [download link](https://drive.google.com/drive/folders/1GOw6iVqsB-f1vmG6rNmdCcgwfB4VZ7_Q?usp=sharing)
+
+## GGML C++ inference (Phase 6b)
+
+Native RepVGG backbone + coarse matching via [ggml](https://github.com/ggerganov/ggml). See **[cpp/BENCHMARK.md](cpp/BENCHMARK.md)** for CPU/CUDA/Vulkan parity (F32/F16 release; Q8_0 experimental).
+
+| GGUF | Size | Status |
+|------|-----:|--------|
+| `eloftr_outdoor-f32.gguf` | 32.7 MB | release parity (3 backends) |
+| `eloftr_outdoor-f16.gguf` | 16.3 MB | release parity |
+| `eloftr_outdoor-q8_0.gguf` | 8.7 MB | experimental |
+
+### GGML validation figures
+
+RepVGG backbone vs PyTorch (`eloftr_outdoor.ckpt`, Piazza 640²). Regenerate: [`assets/ggml_validation_20260727/README.md`](assets/ggml_validation_20260727/README.md).
+
+| GGUF sizes | Quantization accuracy (corr) | Feature parity (CPU) |
+|------------|------------------------------|----------------------|
+| ![quantization sizes](assets/ggml_validation_20260727/quantization_sizes.png) | ![quantization accuracy](assets/ggml_validation_20260727/quantization_accuracy.png) | ![parity cpu](assets/ggml_validation_20260727/eloftr_parity_cpu.png) |
+
+**Indoor:** official EfficientLoFTR release is **outdoor-only** (`eloftr_outdoor.ckpt`). No public indoor checkpoint exists ([issue #35](https://github.com/zju3dv/EfficientLoFTR/issues/35)); LoFTR `indoor_ds*.ckpt` files are a different architecture. See [cpp/BENCHMARK.md](cpp/BENCHMARK.md#indoor-model).
+
+Build (requires ggml submodule):
+
+```bash
+git submodule update --init third_party/ggml
+cmake -S cpp -B cpp/build -DELOFTR_GGML_VULKAN=ON -DVulkan_GLSLC_EXECUTABLE=/usr/local/bin/glslc
+cmake --build cpp/build --target eloftr_backbone -j4
+python scripts/verify_eloftr_ggml.py --gguf models/eloftr_outdoor-f32.gguf --image IMAGE.png --device vulkan
+```
+
+Integrated in **ACloudViewer qLightGlue** as *EfficientLoFTR (end-to-end GGML)* matching mode.
 
 ## Match image pairs with EfficientLoFTR
 

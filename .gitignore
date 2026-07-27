@@ -11,3 +11,11 @@ tmp.*
 logs/
 weights/
 dump/
+
+# GGUF release artifacts (download or convert locally; see cpp/BENCHMARK.md)
+models/*.gguf
+*.gguf
+
+# C++ ggml inference build tree
+cpp/build/
+models/
