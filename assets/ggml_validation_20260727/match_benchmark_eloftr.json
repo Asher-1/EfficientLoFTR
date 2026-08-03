@@ -1,0 +1,40 @@
+[
+  {
+    "backend": "pytorch",
+    "device": "cuda",
+    "quant": "fp32",
+    "matches": 726,
+    "mean_conf": 0.44910377264022827,
+    "avg_ms": 1669.6
+  },
+  {
+    "backend": "ggml",
+    "device": "cpu",
+    "quant": "f16",
+    "matches": 0,
+    "mean_conf": 0.0,
+    "avg_ms": 17444.5,
+    "status": "OK",
+    "match_ratio_vs_pytorch": 0.0
+  },
+  {
+    "backend": "ggml",
+    "device": "cuda",
+    "quant": "f16",
+    "matches": 0,
+    "mean_conf": 0.0,
+    "avg_ms": 19333.9,
+    "status": "OK",
+    "match_ratio_vs_pytorch": 0.0
+  },
+  {
+    "backend": "ggml",
+    "device": "vulkan",
+    "quant": "f16",
+    "matches": 0,
+    "mean_conf": 0.0,
+    "avg_ms": 16810.9,
+    "status": "OK",
+    "match_ratio_vs_pytorch": 0.0
+  }
+]

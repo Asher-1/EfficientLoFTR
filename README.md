@@ -50,6 +50,27 @@ RepVGG backbone vs PyTorch (`eloftr_outdoor.ckpt`, Piazza 640²). Regenerate: [`
 |------------|------------------------------|----------------------|
 | ![quantization sizes](assets/ggml_validation_20260727/quantization_sizes.png) | ![quantization accuracy](assets/ggml_validation_20260727/quantization_accuracy.png) | ![parity cpu](assets/ggml_validation_20260727/eloftr_parity_cpu.png) |
 
+| Match visualization | Match count vs PyTorch | Inference latency |
+|---------------------|------------------------|-------------------|
+| ![match viz](assets/ggml_validation_20260727/match_visualization.png) | ![match accuracy](assets/ggml_validation_20260727/match_accuracy.png) | ![latency](assets/ggml_validation_20260727/inference_latency.png) |
+
+**End-to-end figures (2026-07-29):** phototourism Piazza pair at 640² — PyTorch CUDA **726** matches; GGML F16 CPU/CUDA/Vulkan **0** matches (backbone-only coarse matcher, no transformer/fine yet). RepVGG feature parity remains PASS; match overlay shows PyTorch lines only until Phase 6c ships full GGML matcher.
+
+Regenerate (conda `eloftr` + ACloudViewer `test_eloftr_bench`):
+
+```bash
+conda activate eloftr
+export ACLOUDVIEWER_BUILD=/path/to/ACloudViewer/build_app
+python scripts/generate_match_benchmark_figures.py \
+  --image0 assets/phototourism_sample_images/piazza_san_marco_06795901_3725050516.jpg \
+  --image1 assets/phototourism_sample_images/piazza_san_marco_15148634_5228701572.jpg \
+  --checkpoint weights/eloftr_outdoor.ckpt \
+  --devices cpu,cuda,vulkan \
+  --output-dir assets/ggml_validation_20260727
+```
+
+See [`assets/ggml_validation_20260727/README.md`](assets/ggml_validation_20260727/README.md) and [`cpp/BENCHMARK.md`](cpp/BENCHMARK.md).
+
 **Indoor:** official EfficientLoFTR release is **outdoor-only** (`eloftr_outdoor.ckpt`). No public indoor checkpoint exists ([issue #35](https://github.com/zju3dv/EfficientLoFTR/issues/35)); LoFTR `indoor_ds*.ckpt` files are a different architecture. See [cpp/BENCHMARK.md](cpp/BENCHMARK.md#indoor-model).
 
 Build (requires ggml submodule):
